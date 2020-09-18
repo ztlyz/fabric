@@ -7,7 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 package idemixca
 
 import (
-	"crypto/x509"
 	"encoding/pem"
 	"io/ioutil"
 	"os"
@@ -20,6 +19,7 @@ import (
 	m "github.com/hyperledger/fabric/msp"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tjfoc/gmsm/sm2"
 )
 
 var testDir = filepath.Join(os.TempDir(), "idemixca-test")
@@ -37,7 +37,7 @@ func TestIdemixCa(t *testing.T) {
 	err = proto.Unmarshal(ipkBytes, ipk)
 	require.NoError(t, err)
 
-	encodedRevocationPK, err := x509.MarshalPKIXPublicKey(revocationkey.Public())
+	encodedRevocationPK, err := sm2.MarshalPKIXPublicKey(revocationkey.Public())
 	require.NoError(t, err)
 	pemEncodedRevocationPK := pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: encodedRevocationPK})
 

@@ -9,6 +9,8 @@ SPDX-License-Identifier: Apache-2.0
 package factory
 
 import (
+	"fmt"
+
 	"github.com/hyperledger/fabric/bccsp"
 	"github.com/pkg/errors"
 )
@@ -35,10 +37,12 @@ func InitFactories(config *FactoryOpts) error {
 
 func initFactories(config *FactoryOpts) error {
 	// Take some precautions on default opts
-	if config == nil {
-		config = GetDefaultOpts()
-	}
-
+	fmt.Println("initFactories")
+	// if &config == nil {
+	config = GetDefaultOpts()
+	// 	fmt.Println("jin")
+	// }
+	fmt.Println("config:", config, GetDefaultOpts())
 	if config.Default == "" {
 		config.Default = "SW"
 	}
@@ -50,6 +54,16 @@ func initFactories(config *FactoryOpts) error {
 	// Software-Based BCCSP
 	if config.Default == "SW" && config.SW != nil {
 		f := &SWFactory{}
+		var err error
+		defaultBCCSP, err = initBCCSP(f, config)
+		if err != nil {
+			return errors.Wrapf(err, "Failed initializing BCCSP")
+		}
+	}
+
+	// Software-Based BCCSP
+	if config.Default == "GM" && config.SW != nil {
+		f := &GMFactory{}
 		var err error
 		defaultBCCSP, err = initBCCSP(f, config)
 		if err != nil {
@@ -70,6 +84,8 @@ func GetBCCSPFromOpts(config *FactoryOpts) (bccsp.BCCSP, error) {
 	switch config.Default {
 	case "SW":
 		f = &SWFactory{}
+	case "GM":
+		f = &GMFactory{}
 	default:
 		return nil, errors.Errorf("Could not find BCCSP, no '%s' provider", config.Default)
 	}

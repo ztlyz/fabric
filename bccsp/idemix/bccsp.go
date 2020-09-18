@@ -8,21 +8,21 @@ package idemix
 import (
 	"reflect"
 
+	"github.com/hyperledger/fabric/bccsp/gm"
 	"github.com/hyperledger/fabric/bccsp/idemix/bridge"
 
 	"github.com/hyperledger/fabric/bccsp/idemix/handlers"
 
 	"github.com/hyperledger/fabric/bccsp"
-	"github.com/hyperledger/fabric/bccsp/sw"
 	"github.com/pkg/errors"
 )
 
 type csp struct {
-	*sw.CSP
+	*gm.CSP
 }
 
 func New(keyStore bccsp.KeyStore) (*csp, error) {
-	base, err := sw.New(keyStore)
+	base, err := gm.New(keyStore)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed instantiating base bccsp")
 	}

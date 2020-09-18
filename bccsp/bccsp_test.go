@@ -24,6 +24,65 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestSM4Opts(t *testing.T) {
+	test := func(ephemeral bool) {
+		for _, opts := range []KeyGenOpts{
+			&GMSM4ImportKeyOpts{ephemeral},
+		} {
+			// fmt.Println("expect:", reflect.TypeOf(opts).String())
+			// expectedAlgorithm := reflect.TypeOf(opts).String()[7:12]
+			// require.Equal(t, expectedAlgorithm, opts.Algorithm())
+			require.Equal(t, "GMSM4", opts.Algorithm())
+			require.Equal(t, ephemeral, opts.Ephemeral())
+		}
+	}
+	test(true)
+	test(false)
+
+	opts := &GMSM4KeyGenOpts{true}
+	require.Equal(t, "GMSM4", opts.Algorithm())
+	require.True(t, opts.Ephemeral())
+	opts.Temporary = false
+	require.False(t, opts.Ephemeral())
+}
+
+func TestSM2Opts(t *testing.T) {
+	test := func(ephemeral bool) {
+		for _, opts := range []KeyGenOpts{
+			&GMSM2KeyGenOpts{ephemeral},
+			// &ECDSAP384KeyGenOpts{ephemeral},
+		} {
+			// expectedAlgorithm := reflect.TypeOf(opts).String()[7:16]
+			// require.Equal(t, expectedAlgorithm, opts.Algorithm())
+			require.Equal(t, "GMSM2", opts.Algorithm())
+			require.Equal(t, ephemeral, opts.Ephemeral())
+		}
+	}
+	test(true)
+	test(false)
+
+	test = func(ephemeral bool) {
+		for _, opts := range []KeyGenOpts{
+			&GMSM2KeyGenOpts{ephemeral},
+			&GMSM2PublicKeyImportOpts{ephemeral},
+			&GMSM2PrivateKeyImportOpts{ephemeral},
+			// &ECDSAGoPublicKeyImportOpts{ephemeral},
+		} {
+			require.Equal(t, "GMSM2", opts.Algorithm())
+			require.Equal(t, ephemeral, opts.Ephemeral())
+		}
+	}
+	test(true)
+	test(false)
+
+	// opts := &ECDSAReRandKeyOpts{Temporary: true}
+	// require.True(t, opts.Ephemeral())
+	// opts.Temporary = false
+	// require.False(t, opts.Ephemeral())
+	// require.Equal(t, "ECDSA_RERAND", opts.Algorithm())
+	// require.Empty(t, opts.ExpansionValue())
+}
+
 func TestAESOpts(t *testing.T) {
 	test := func(ephemeral bool) {
 		for _, opts := range []KeyGenOpts{
@@ -116,15 +175,17 @@ func TestHMAC(t *testing.T) {
 
 func TestKeyGenOpts(t *testing.T) {
 	expectedAlgorithms := map[reflect.Type]string{
-		reflect.TypeOf(&HMACImportKeyOpts{}):       "HMAC",
-		reflect.TypeOf(&X509PublicKeyImportOpts{}): "X509Certificate",
-		reflect.TypeOf(&AES256ImportKeyOpts{}):     "AES",
+		// reflect.TypeOf(&HMACImportKeyOpts{}):       "HMAC",
+		// reflect.TypeOf(&X509PublicKeyImportOpts{}): "X509Certificate",
+		// reflect.TypeOf(&AES256ImportKeyOpts{}):     "AES",
+		reflect.TypeOf(&GMSM4ImportKeyOpts{}): "GMSM4",
 	}
 	test := func(ephemeral bool) {
 		for _, opts := range []KeyGenOpts{
-			&HMACImportKeyOpts{ephemeral},
-			&X509PublicKeyImportOpts{ephemeral},
-			&AES256ImportKeyOpts{ephemeral},
+			// &HMACImportKeyOpts{ephemeral},
+			// &X509PublicKeyImportOpts{ephemeral},
+			// &AES256ImportKeyOpts{ephemeral},
+			&GMSM4ImportKeyOpts{ephemeral},
 		} {
 			expectedAlgorithm := expectedAlgorithms[reflect.TypeOf(opts)]
 			require.Equal(t, expectedAlgorithm, opts.Algorithm())

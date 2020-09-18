@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package factory
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/hyperledger/fabric/bccsp"
@@ -40,11 +41,14 @@ type BCCSPFactory interface {
 
 // GetDefault returns a non-ephemeral (long-term) BCCSP
 func GetDefault() bccsp.BCCSP {
+	fmt.Println("GetDefault")
 	if defaultBCCSP == nil {
 		logger.Debug("Before using BCCSP, please call InitFactories(). Falling back to bootBCCSP.")
 		bootBCCSPInitOnce.Do(func() {
 			var err error
-			bootBCCSP, err = (&SWFactory{}).Get(GetDefaultOpts())
+			// f := &SWFactory{}
+			f := &GMFactory{}
+			bootBCCSP, err = f.Get(GetDefaultOpts())
 			if err != nil {
 				panic("BCCSP Internal error, failed initialization with GetDefaultOpts!")
 			}
@@ -55,6 +59,7 @@ func GetDefault() bccsp.BCCSP {
 }
 
 func initBCCSP(f BCCSPFactory, config *FactoryOpts) (bccsp.BCCSP, error) {
+	fmt.Println("f:", f)
 	csp, err := f.Get(config)
 	if err != nil {
 		return nil, errors.Errorf("Could not initialize BCCSP %s [%s]", f.Name(), err)

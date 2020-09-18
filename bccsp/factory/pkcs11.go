@@ -59,6 +59,16 @@ func initFactories(config *FactoryOpts) error {
 		}
 	}
 
+	// Software-Based BCCSP
+	if config.Default == "GM" && config.SW != nil {
+		f := &GMFactory{}
+		var err error
+		defaultBCCSP, err = initBCCSP(f, config)
+		if err != nil {
+			return errors.Wrap(err, "Failed initializing GM.BCCSP")
+		}
+	}
+
 	// PKCS11-Based BCCSP
 	if config.Default == "PKCS11" && config.PKCS11 != nil {
 		f := &PKCS11Factory{}
@@ -82,6 +92,8 @@ func GetBCCSPFromOpts(config *FactoryOpts) (bccsp.BCCSP, error) {
 	switch config.Default {
 	case "SW":
 		f = &SWFactory{}
+	case "GM":
+		f = &GMFactory{}
 	case "PKCS11":
 		f = &PKCS11Factory{}
 	default:

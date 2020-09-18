@@ -14,15 +14,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+//TestInitFactories .
 func TestInitFactories(t *testing.T) {
 	err := initFactories(&FactoryOpts{
 		Default: "SW",
 		SW:      &SwOpts{},
 	})
-	require.EqualError(t, err, "Failed initializing BCCSP: Could not initialize BCCSP SW [Failed initializing configuration at [0,]: Hash Family not supported []]")
+	require.Contains(t, err, "Failed initializing BCCSP: Could not initialize BCCSP SW [Failed initializing configuration at [0,]: Hash Family not supported []]")
 
 	err = initFactories(&FactoryOpts{
 		Default: "PKCS11",
 	})
-	require.EqualError(t, err, "Could not find default `PKCS11` BCCSP")
+	require.Contains(t, err, "Could not find default `PKCS11` BCCSP")
 }

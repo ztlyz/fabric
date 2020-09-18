@@ -59,10 +59,17 @@ BCCSP:
 		os.Exit(-1)
 	}
 
+	// cfgVariations := []*FactoryOpts{
+	// 	{},
+	// 	{Default: "SW"},
+	// 	{Default: "SW", SW: &SwOpts{Hash: "SHA2", Security: 256}},
+	// 	yamlBCCSP,
+	// }
+
 	cfgVariations := []*FactoryOpts{
 		{},
-		{Default: "SW"},
-		{Default: "SW", SW: &SwOpts{Hash: "SHA2", Security: 256}},
+		{Default: "GM"},
+		{Default: "GM", SW: &SwOpts{Hash: "GMSM3", Security: 256}},
 		yamlBCCSP,
 	}
 

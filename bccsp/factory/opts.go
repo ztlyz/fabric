@@ -19,11 +19,18 @@ package factory
 // GetDefaultOpts offers a default implementation for Opts
 // returns a new instance every time
 func GetDefaultOpts() *FactoryOpts {
+	// fmt.Println("GetDefaultOpts")
 	return &FactoryOpts{
-		Default: "SW",
+		// Default: "SW",
+		// SW: &SwOpts{
+		// 	Hash:     "SHA2",
+		// 	Security: 256,
+		// },
+		Default: "GM",
 		SW: &SwOpts{
-			Hash:     "SHA2",
+			Hash:     "GMSM3",
 			Security: 256,
+			// Ephemeral:  true,
 		},
 	}
 }
